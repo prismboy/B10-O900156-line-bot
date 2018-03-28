@@ -77,9 +77,9 @@ var cantRecognize = function (event) {
 var verifyRequest = function(request) {
 // todo 実装を見直す
     var key = request.headers['X-Line-Signature'];
-    var hmac = crypto.createHmac('sha512', key);
-    hmac.update(request.body);
-    return hmac.digest('base64') === key;
+    var hmac = crypto.createHmac('sha512', key.toString());
+    hmac.update(JSON.stringify(request.body));
+    return hmac.digest('base64') === key.toString();
 };
 
 // 画像認識
@@ -200,7 +200,7 @@ var textCmd = function (event) {
 /** LINE から呼び出されるコールバック */
 exports.callback = function (req, res) {
     // リクエストがLINE Platformから送信されたものか検証する。
-    if ( !verifyRequest ) {
+    if ( !verifyRequest(req) ) {
         console.log('検証エラー: 不正なリクエストです。');
         res.sendStatus(500);
         return;
@@ -217,12 +217,16 @@ exports.callback = function (req, res) {
         // text
         if (event.message.text.toLowerCase().indexOf('cmd:') > -1) {
             textCmd(event);
+        } else if(event.message.text === "Hello, world") {
+            res.sendStatus(200);
         } else {
             pushMsg('会話は今勉強中だからちょっと待って', "1", "107", event);
         }
     } else if (event.message.type === "image") {
         // images
         recognize(event);
+    } else if(event.message.type === "sticker") {
+      res.sendStatus(200);
     } else {
         //other
         pushMsg('写真を送ってください。', "1", "107", event);
