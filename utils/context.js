@@ -29,15 +29,16 @@ var vcapServices = JSON.parse(process.env.VCAP_SERVICES);
 
 /** Watson Visual Recognition */
 // ref https://github.com/watson-developer-cloud/node-sdk
+var VisualRecognitionV3 = require('watson-developer-cloud/visual-recognition/v3');
 var watson = require('watson-developer-cloud');
 var visualRecognitionName = vcapServices.watson_vision_combined[0].name;
 var visualRecognitionCreds = appEnv.getServiceCreds(visualRecognitionName);
 // console.log("API KEY: "+visualRecognitionCreds.api_key);
 // console.log("VisualRecognitionName: "+visualRecognitionName);
-var visualRecognition = watson.visual_recognition({
+var visualRecognition = new VisualRecognitionV3({
     api_key: visualRecognitionCreds.api_key,
     version: 'v3',
-    version_date: '2016-05-20',
+    version_date: '2018-03-19',
     headers : {
         'Accept-Language': 'en'
     }
@@ -49,6 +50,8 @@ exports.headers = {
     'Content-Type': 'application/json; charset=UTF-8',
     'Authorization': 'Bearer ' + process.env.CHANNEL_ACCESS_TOKEN
 };
+
+exports.threshold = process.env.SCORE_THRESHOLD;
 
 /**
  * classify, detectFaces

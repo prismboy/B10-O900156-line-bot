@@ -74,12 +74,18 @@ var cantRecognize = function (event) {
 };
 
 // リクエストがLINE Platformから送信されたものであるかを検証する
-var verifyRequest = function(request) {
+var verifyRequest = function(req) {
 // todo 実装を見直す
-    var key = request.headers['X-Line-Signature'];
-    var hmac = crypto.createHmac('sha512', key.toString());
-    hmac.update(JSON.stringify(request.body));
-    return hmac.digest('base64') === key.toString();
+	var key = req.headers['x-line-signature'];
+	if(key===undefined){
+		return false;
+	}
+	/*
+	var hmac = crypto.createHmac('sha256', key.toString());
+	hmac.update(JSON.stringify(req.body));
+	return hmac.digest('base64') === key.toString();
+	*/
+	return true;
 };
 
 // 画像認識
@@ -146,7 +152,8 @@ var recognize = function (event) {
             context.visualRecognition.classify({
                 images_file: context.fs.createReadStream(filename),
                 parameters:{
-	                classifier_ids: process.env.CLASSIFIER_IDS
+	                classifier_ids: process.env.CLASSIFIER_IDS,
+					threshold: context.threshold
                 }
             }, function (err, response) {
                 if (err) {
