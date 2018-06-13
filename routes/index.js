@@ -151,7 +151,7 @@ var recognize = function (event) {
             pushMsg("画像を分類中です", "", "", event);
 			var params = {
                 images_file: context.fs.createReadStream(filename),
-                classifier_ids: process.env.CLASSIFIER_IDS.split(','),
+                classifier_ids: context.classifier_ids,
 				threshold: context.threshold
             };
             context.visualRecognition.classify(params, function (err, response) {
@@ -190,7 +190,8 @@ var textCmd = function (event) {
             'current - 現在のモードを表示\n' +
             'mode:f - 顔認識モード\n' +
             'mode:c - 分類認識モード\n' +
-			'th[:num] - 確信度しきい値の表示/設定', "", "", event);
+			'th[:num] - 確信度しきい値の表示/設定' +
+			'ids[:classifier_ids] - 分類器IDの表示/設定', "", "", event);
     } else if (event.message.text.toLowerCase().indexOf('current') > -1){
         pushMsg(JSON.stringify(context.appSetting), "", "", event);
     } else if (event.message.text.toLowerCase().indexOf('mode:f') > -1){
@@ -205,7 +206,13 @@ var textCmd = function (event) {
 			context.threshold = threshold[2];
 		}
 		pushMsg("threshold : "+context.threshold, "", "", event);
-    } else {
+    } else if(event.message.text.toLowerCase().indexOf('ids') > -1) {
+		var buf = event.message.text.split(":");
+		if (buf.length >= 3) {
+			context.classifier_ids = buf[2].split(',');
+		}
+		pushMsg("classifier_ids : "+JSON.stringify(context.classifier_ids), "", "", event);
+	} else {
         pushMsg("cmd:helpでコマンドを確認してください", "", "", event);
     }
 };

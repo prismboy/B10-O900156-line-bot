@@ -53,6 +53,8 @@ exports.headers = {
 
 exports.threshold = process.env.SCORE_THRESHOLD;
 
+exports.classifier_ids = process.env.CLASSIFIER_IDS.split(',');
+
 /**
  * classify, detectFaces
  */
