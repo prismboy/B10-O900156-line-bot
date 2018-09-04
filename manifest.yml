@@ -13,5 +13,5 @@ applications:
   - O900156-VR
   env:
     CHANNEL_ACCESS_TOKEN: DBUIsPfBvpc/JmUzbZukRdmvpe7CMWcqc3Ipaa5PM57npSsWd2qQiypvwBWJ6EZLBev9OrysYe2ddEgcIbhsjaEpewhxgA4w0Icmqh9XxmeIuzzElj5v+0qNo3QTZV2Tac6DpUZ15g9HO3oxy7CR5wdB04t89/1O/w1cDnyilFU=
-    CLASSIFIER_IDS: KansaiSoulFoods_1336778241,default
+    CLASSIFIER_IDS: KansaiSoulFoods_1336778241,default,food
     SCORE_THRESHOLD: 0.7
